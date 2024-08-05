@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: grid;
+    grid-template-columns: 2fr 8fr;
+    padding: 0.8rem;
+    font-family: 'Roboto', sans-serif;
+}
+
+body > * {
+    border: 1px solid black;
+}
+/* ------------------------------ */
+/* Aside */
+.aside__content {
+    display: grid;
+}
+
+.aside__account {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    column-gap: 0.75rem;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 0.4rem;
+    padding: 0.6rem 0.3rem;
+}
+
+.aside__account > img {
+    width: 40px;
+    border-radius: 1rem;
+    justify-self: center;
+}
+
+.account__name {
+    font-size: 1.1rem;
+}
+
+.aside__tab {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.6rem 0.3rem;
+}
+
+.aside__tab:hover {
+    border-radius: 0.4rem;
+    background-color: rgb(0, 0, 0, 0.1);
+}
+
+.aside__tab > img {
+    width: 20px;
+    justify-self: center;
+}
+
+.tab__text {
+    font-size: 1rem;
+}
+
+.aside__add-task .tab__text {
+    font-size: 1.125rem;
+}
+
+.aside__tab:last-child {
+    margin-bottom: 2rem;
+}
+
+/* ------------------------------------------------ */
+
+.aside__projects {
+}
+
+.aside__projects-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.3rem;
+}
+
+.projects-details {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.projects-details > * {
+    cursor: pointer;
+}
