@@ -3,7 +3,6 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="./style.css" />
         <title>HTML</title>
     </head>
     <body>
@@ -15,17 +14,17 @@
                     <div class="account__notification"></div>
                 </div>
 
-                <div class="aside__tab aside__add-task">
+                <div class="aside__tab aside__add-task" id="add-task">
                     <img src="./imgs/add-circle-stroke-rounded.svg" alt="Plus icon" />
                     <div class="tab__text">Add task</div>
                 </div>
 
-                <div class="aside__tab">
+                <div class="aside__tab aside__filter">
                     <img src="./imgs/inbox-stroke-rounded.svg" alt="Inbox icon" />
                     <div class="tab__text">Incoming</div>
                 </div>
 
-                <div class="aside__tab">
+                <div class="aside__tab aside__filter">
                     <img src="./imgs/calendar-03-stroke-rounded.svg" alt="Today icon" />
                     <div class="tab__text">Today</div>
                 </div>
@@ -44,23 +43,80 @@
                     </div>
                 </div>
 
-                <div class="projects">
-                    <div class="project aside__tab">
-                        <img src="./imgs/grid-stroke-rounded.svg" alt="Grid" />
-                        <div class="project__text tab__text">My Project</div>
-                    </div>
-                </div>
+                <div class="projects"></div>
             </div>
         </aside>
 
         <main>
             <div class="main__content">
-                <h3 class="main__title">Incoming</h3>
-                <div class="main__add-task">
-                    <div class="add-task__image"></div>
+                <div class="main__info">
+                    <h3 class="main__title">Incoming</h3>
+                    <p class="main__number-of-tasks">bruh</p>
+                </div>
+
+                <div class="main__tasks"></div>
+
+                <div class="main__add-task" id="add-task">
+                    <img src="./imgs/add-circle-stroke-rounded.svg" alt="Plus Icon" />
                     <div class="add-task__text">Add task</div>
                 </div>
             </div>
         </main>
+
+        <div class="task hidden">
+            <h3 class="task__name">Task name</h3>
+            <img class="task__exit" src="./imgs/cancel-01-stroke-rounded.svg" alt="X mark" />
+            <p class="task__description">Description</p>
+            <div class="task__details">
+                <span class="task__due-date">Till end of time</span>
+                <span class="task__priority">1 priority</span>
+                <span class="task__project">Default</span>
+            </div>
+        </div>
+
+        <div class="add-task hidden">
+            <h4>Add Task</h4>
+            <img class="task__exit" src="./imgs/cancel-01-stroke-rounded.svg" alt="X mark" />
+            <form action="#" class="add-task__form">
+                <div>
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" name="title" required />
+                </div>
+                <div>
+                    <label for="description">Description:</label>
+                    <input type="text" id="description" name="description" />
+                </div>
+                <div class="add-task__option">
+                    <label for="dueDate">Due Date:</label>
+                    <input type="date" id="dueDate" name="dueDate" />
+                </div>
+                <div class="add-task__option">
+                    <label for="priority">Priority:</label>
+                    <select name="priority" id="priority">
+                        <option value="1">1</option>
+                    </select>
+                </div>
+                <div class="add-task__option">
+                    <label for="project">Project:</label>
+                    <select name="project" id="prject">
+                        <option value="default">default</option>
+                    </select>
+                </div>
+                <button>Add Task</button>
+            </form>
+        </div>
+
+        <div class="add-project hidden">
+            <h4>Add project</h4>
+            <img class="task__exit" src="./imgs/cancel-01-stroke-rounded.svg" alt="X mark" />
+            <form action="#" class="add-project__form">
+                <div>
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" name="title" required />
+                </div>
+                <button>Add Project</button>
+            </form>
+        </div>
+        <div class="overlay hidden"></div>
     </body>
 </html>
