@@ -7,11 +7,16 @@ import ProjectsHandler from './modules/projectsHandler';
 import GridSvg from './imgs/grid-stroke-rounded.svg';
 import CircleSvg from './imgs/circle-stroke-rounded.svg';
 import XMarkSvg from './imgs/cancel-01-stroke-rounded.svg';
+import TrashCanSvg from './imgs/delete-02-stroke-rounded.svg';
 
 const DOM = (function () {
     // Main content
     const tasks = document.querySelector('.main__tasks');
     const taskWindow = document.querySelector('.task');
+    const mainInfo = document.querySelector('.main__info');
+    const mainTitle = mainInfo.querySelector('h3');
+    const mainNumberOfTasks = mainInfo.querySelector('p');
+    const trashCans = document.querySelectorAll('.trash-can');
 
     // Task window
     const addTaskButton = document.querySelectorAll('#add-task');
@@ -32,9 +37,15 @@ const DOM = (function () {
     // ------------------------- MAIN ----------------------------------------
     // Open Task
     tasks.addEventListener('click', (e) => {
-        const currentTaskIndex = e.target.closest('.main__task').getAttribute('data-index');
-        const currentTask = TasksHandler.getTask(currentTaskIndex);
-        showTask(currentTask);
+        const currentTaskId = e.target.closest('.main__task').getAttribute('data-id');
+
+        if (e.target.classList.contains('trash-can')) {
+            TasksHandler.deleteTask(currentTaskId);
+            updateTasks();
+        } else {
+            const currentTask = TasksHandler.getTask(currentTaskId);
+            showTask(currentTask);
+        }
     });
 
     // ------------------------- TASK ----------------------------------------
@@ -60,15 +71,39 @@ const DOM = (function () {
     // ------------------------- ASIDE ---------------------------------------
     asideFilters.forEach((element) => {
         element.addEventListener('click', () => {
-            TasksHandler.changeFilter(
-                element.querySelector('.tab__text').textContent.toLowerCase()
-            );
+            const currentFilter = element.querySelector('.tab__text').textContent;
 
+            TasksHandler.changeFilter(currentFilter.toLowerCase());
+
+            mainTitle.textContent = currentFilter;
+
+            ProjectsHandler.editSelectedProject('none');
+
+            updateProjects();
             updateTasks();
         });
     });
 
     // ------------------------- PROJECT -------------------------------------
+    projectsContent.addEventListener('click', (e) => {
+        const currentProjectId = e.target.closest('.project').getAttribute('data-id');
+        const currentProjectName = e.target.closest('.project').textContent;
+
+        if (e.target.classList.contains('trash-can')) {
+            ProjectsHandler.deleteProject(currentProjectId);
+            if (TasksHandler.getFilter() == currentProjectId) {
+                TasksHandler.changeFilter('incoming');
+                mainTitle.textContent = 'Incoming';
+            }
+        } else {
+            TasksHandler.changeFilter(currentProjectId);
+            ProjectsHandler.editSelectedProject(currentProjectId);
+            mainTitle.textContent = currentProjectName;
+        }
+        updateTasks();
+        updateProjects();
+    });
+
     addProjectButton.addEventListener('click', () => showWindow(addProjectWindow));
 
     addProjectForm.addEventListener('submit', (e) => {
@@ -95,12 +130,15 @@ const DOM = (function () {
         });
 
         formSelects.forEach((element) => {
-            values[element.name] = element.value;
+            if (element.name === 'project') {
+                values.projectId = element.value;
+                values.project = element.querySelector(`[value="${element.value}"]`).textContent;
+            } else {
+                values[element.name] = element.value;
+            }
         });
 
-        if (values['dueDate'] === '') {
-            values['dueDate'] = new Date();
-        }
+        if (values['dueDate'] === '') values['dueDate'] = new Date();
 
         values['dueDate'] = format(values['dueDate'], 'dd-MM-yyyy');
         values['id'] = new Date().getTime();
@@ -126,16 +164,25 @@ const DOM = (function () {
     const updateTasks = () => {
         const tasksStorage = TasksHandler.getStorage();
         tasks.innerHTML = ``;
+        let count = 0;
 
         for (const value of tasksStorage.values()) {
+            count++;
             const newTaskHTML = `
-                <div class="main__task" data-index=${value.id}>
-                    <img src="${CircleSvg}" alt="Circle" />
-                    <div class="project__text tab__text">${value.title}</div>
+                <div class="main__task" data-id=${value.id}>
+                    <div> 
+                        <img src="${CircleSvg}" alt="Circle" />
+                        <div class="project__text tab__text">${value.title}</div>
+                    </div>
+                    <div>
+                        <img class="trash-can" src="${TrashCanSvg}" alt="Trash Can" />
+                    </div>
                 </div>`;
 
             tasks.innerHTML += newTaskHTML;
         }
+
+        mainNumberOfTasks.textContent = `${count} tasks`;
     };
 
     const showTask = (element) => {
@@ -148,22 +195,34 @@ const DOM = (function () {
                 <span class="task__priority">${element.priority} priority</span>
                 <span class="task__project">${element.project}</span>
             </div>`;
-
         showWindow(taskWindow);
     };
 
     const updateProjects = () => {
         const projects = ProjectsHandler.getProjects();
+        const projectSelect = addTaskForm.querySelector('.add-task__projects');
+
         projectsContent.innerHTML = ``;
+        projectSelect.innerHTML = `<option class="option-incoming" value="incoming">Incoming</option>`;
 
         for (const element of projects.values()) {
             const newProjectHTML = `
-                    <div class="project aside__tab">
-                        <img src="${GridSvg}" alt="Grid" />
-                        <div class="project__text tab__text" data-id="${element.id}">${element.title}</div>
+                    <div class="project" data-id="${element.id}">
+                        <div> 
+                            <img src="${GridSvg}" alt="Grid" />
+                            <div class="project__text tab__text">${element.title}</div>
+                        </div>
+                        <div>
+                            <img class="trash-can" src="${TrashCanSvg}" alt="Trash Can" />
+                        </div>
                     </div>`;
 
+            const newProjectOption = `<option value="${element.id}" ${
+                element.selected ? 'selected' : ''
+            }>${element.title}</option>`;
+
             projectsContent.innerHTML += newProjectHTML;
+            projectSelect.innerHTML += newProjectOption;
         }
     };
 

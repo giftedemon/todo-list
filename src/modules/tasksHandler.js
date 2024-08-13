@@ -11,8 +11,10 @@ const TasksHandler = (function () {
         localStorage.setItem('tasks', JSON.stringify(tasks));
     };
 
-    const deleteTask = (index) => {
-        // ADD FUNCTION
+    const deleteTask = (id) => {
+        let tasks = JSON.parse(localStorage.tasks);
+        tasks = tasks.filter((element) => element.id != id);
+        localStorage.setItem('tasks', JSON.stringify(tasks));
     };
 
     const getTask = (id) => {
@@ -21,6 +23,10 @@ const TasksHandler = (function () {
 
     const changeFilter = (newFilter) => {
         filter = newFilter;
+    };
+
+    const getFilter = () => {
+        return filter;
     };
 
     const getStorage = () => {
@@ -33,18 +39,23 @@ const TasksHandler = (function () {
             );
         });
 
-        if (filter === 'today') {
+        if (filter === 'incoming') {
+            return copyOfTasks;
+        } else if (filter === 'today') {
             const todayTasks = copyOfTasks.filter(
                 (element) => element.dueDate === format(new Date(), 'dd-MM-yyyy')
             );
 
             return todayTasks;
+        } else {
+            const returnTasks = copyOfTasks.filter((element) => {
+                return element.projectId == filter;
+            });
+            return returnTasks;
         }
-
-        return copyOfTasks;
     };
 
-    return { addTask, getTask, deleteTask, getStorage, changeFilter };
+    return { addTask, getTask, deleteTask, getStorage, changeFilter, getFilter };
 })();
 
 export default TasksHandler;
