@@ -1,4 +1,5 @@
 import Project from './project';
+import TasksHandler from './tasksHandler';
 
 const ProjectsHandler = (function () {
     const addProject = (obj) => {
@@ -12,10 +13,11 @@ const ProjectsHandler = (function () {
         let projects = JSON.parse(localStorage.projects);
         projects = projects.filter((element) => element.id != id);
         localStorage.setItem('projects', JSON.stringify(projects));
+        TasksHandler.deleteProjectTasks(id);
     };
 
     const editSelectedProject = (id) => {
-        let projects = JSON.parse(localStorage.projects);
+        let projects = localStorage.projects ? JSON.parse(localStorage.projects) : [];
         projects.map((element) => {
             if (element.id == id) {
                 element.selected = true;

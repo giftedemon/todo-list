@@ -7,6 +7,7 @@ class Task {
         this.id = id;
         this.project = project;
         this.projectId = projectId;
+        this.completed = false;
     }
 }
 
